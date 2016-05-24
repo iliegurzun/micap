@@ -8,6 +8,10 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
+/**
+ * Class DefaultController
+ * @package AppBundle\Controller
+ */
 class DefaultController extends FOSRestController
 {
     /**
@@ -19,11 +23,12 @@ class DefaultController extends FOSRestController
      * )
      *
      * @Rest\Get
-     * @Route("/api/{cuisine}.{_format}", name="test_endpoint")
+     * @Route("/api/{username}.{_format}", name="test_endpoint")
      */
-    public function indexAction($cuisine, Request $request)
+    public function indexAction($username, Request $request)
     {
-        return [$cuisine];
-//        return sprintf('Parameter is %s.', $cuisine);
+        $userRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('AppBundle:User');
+
+        return $userRepo->findOneByUsername($username);
     }
 }
