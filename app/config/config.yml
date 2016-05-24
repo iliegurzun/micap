@@ -9,6 +9,7 @@ parameters:
     locale: en
 
 framework:
+    translator: ~
     #esi:             ~
     #translator:      { fallbacks: ["%locale%"] }
     secret:          "%secret%"
@@ -40,7 +41,7 @@ twig:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
+        driver:   "%database_driver%"
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
@@ -66,3 +67,31 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+fos_user:
+    db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
+    firewall_name: main
+    user_class: AppBundle\Entity\User
+
+jms_serializer:
+    metadata:
+        directories:
+            FOSUB:
+                namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/serializer/FOSUB"
+
+fos_rest:
+    body_listener: true
+    param_fetcher_listener: true
+    view:
+        formats:
+            json: true
+            xml: true
+            html: false
+        view_response_listener: 'force'
+    format_listener:
+        rules:
+            - { path: ^/api/doc, priorities: [ html ], fallback_format: html, prefer_extension: false }
+            - { path: ^/api/*, priorities: [ json, xml ], fallback_format: json, prefer_extension: true }
+            - { path: ^/, priorities: [ html ], fallback_format: html, prefer_extension: false }
+nelmio_api_doc: ~

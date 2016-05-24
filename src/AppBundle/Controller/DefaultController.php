@@ -2,20 +2,28 @@
 
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-class DefaultController extends Controller
+class DefaultController extends FOSRestController
 {
     /**
-     * @Route("/", name="homepage")
+     * @ApiDoc(
+     *     resource=true,
+     *     description="Test api doc annotations",
+     *     views={"default"}
+     *
+     * )
+     *
+     * @Rest\Get
+     * @Route("/api/{cuisine}.{_format}", name="test_endpoint")
      */
-    public function indexAction(Request $request)
+    public function indexAction($cuisine, Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..'),
-        ]);
+        return [$cuisine];
+//        return sprintf('Parameter is %s.', $cuisine);
     }
 }
